@@ -37,8 +37,8 @@ class TwitterBootswatchHelper extends AppHelper {
             $themes[$a] = array(
                 'name' => $_t['name'],
                 'description' => (isset($_t['description'])) ? $_t['description'] : '',
-                'css' => $_t['css-local'],
-                'thumbnail' => $_t['thumbnail-local']
+                'css' => (isset($_t['css-local'])) ? $_t['css-local'] : $_t['css-min'],
+                'thumbnail' => (isset($_t['thumbnail-local'])) ? $_t['thumbnail-local'] : $_t['thumbnail']
             );
         }
         return $themes;
