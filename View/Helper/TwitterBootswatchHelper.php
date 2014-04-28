@@ -15,6 +15,9 @@ class TwitterBootswatchHelper extends AppHelper {
 
     private $_bw = 'http://api.bootswatch.com/';
 
+	private $_iconsBlack = 'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/img/glyphicons-halflings.png';
+	private $_iconsWhite = 'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/img/glyphicons-halflings-white.png';
+
     private $_themes = array();
 
     /*
@@ -64,12 +67,13 @@ class TwitterBootswatchHelper extends AppHelper {
         // query api
         $results = $HttpSocket->get($this->_bw);
         $_t = json_decode($results, true);
+
+		$this->_themes = array();
+
         if (isset($_t['themes'])) {
             foreach ($_t['themes'] as $a => $theme) {
-                $_t[$this->_sort_name($theme['name'])] = $theme;
+                $this->_themes[ $theme['name'] ] = $theme;
             }
-            unset($_t['themes']);
-            $this->_themes = $_t;
             return true;
         } else {
             $this->_themes = array();
@@ -102,6 +106,23 @@ class TwitterBootswatchHelper extends AppHelper {
                     $file->write($HttpSocket->get($theme['thumbnail']), 'w');
                 }
             }
+
+
+			// The icon files are shared across all themes but still need to be in
+			// the right directory. If they don't exist, download them.
+            $file = new File($imgFolder->path."/".basename($this->_iconsBlack));
+            if (!$file->exists()) {
+                if ($file->create()) {
+                    $file->write($HttpSocket->get($this->_iconsBlack), 'w');
+                }
+			}
+
+            $file = new File($imgFolder->path."/".basename($this->_iconsWhite));
+            if (!$file->exists()) {
+                if ($file->create()) {
+                    $file->write($HttpSocket->get($this->_iconsWhite), 'w');
+                }
+			}
         }
     }
 
