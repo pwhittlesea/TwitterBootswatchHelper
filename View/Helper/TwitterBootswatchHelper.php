@@ -67,12 +67,13 @@ class TwitterBootswatchHelper extends AppHelper {
         // query api
         $results = $HttpSocket->get($this->_bw);
         $_t = json_decode($results, true);
+
+		$this->_themes = array();
+
         if (isset($_t['themes'])) {
             foreach ($_t['themes'] as $a => $theme) {
-                $_t[$this->_sort_name($theme['name'])] = $theme;
+                $this->_themes[ $theme['name'] ] = $theme;
             }
-            unset($_t['themes']);
-            $this->_themes = $_t;
             return true;
         } else {
             $this->_themes = array();
